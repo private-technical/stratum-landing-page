@@ -1,26 +1,92 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-bg: #000000;
+  --color-fg: #ffffff;
+  --color-surface: #1a1a1a;
+  --color-surface-2: #262626;
+  --color-muted: rgba(255, 255, 255, 0.6);
+  --color-border: rgba(255, 255, 255, 0.1);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--color-bg);
+    color: var(--color-fg);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  img {
+    max-width: 100%;
+    display: block;
+  }
+
+  button,
+  input {
+    font-family: inherit;
+  }
+
+  button {
+    cursor: pointer;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ------------------------------------------------------------------ */
+/*  Scrollbars — thin, minimal, and consistent across browsers         */
+/* ------------------------------------------------------------------ */
+/* Applied universally (not just html) because this app scrolls inside
+   a custom container div, not the document itself — html/body are set
+   to overflow: hidden, so a rule scoped only to html would never
+   actually apply to the element that's really scrolling. */
+* {
+  /* Firefox, and now also Chromium 121+ / Safari 18.2+ */
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-muted) transparent;
+}
+
+html,
+.overflow-y-auto,
+.overflow-auto {
+  /* Reserves the scrollbar's space up front so content doesn't shift
+     width when a scrollbar appears/disappears. */
+  scrollbar-gutter: stable;
+}
+
+/* Chrome, Edge, Safari (WebKit) — applied broadly so any scrollable
+   element on the page, not just the document body, gets the same
+   thin, minimal treatment. */
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--color-muted);
+  border-radius: 9999px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-fg);
+  opacity: 0.8;
+}
+
+*::-webkit-scrollbar-corner {
+  background: transparent;
 }
