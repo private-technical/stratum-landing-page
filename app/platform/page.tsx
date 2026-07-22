@@ -28,8 +28,11 @@ function fluid(min: number, max: number): string {
   ).toFixed(2)}vw), ${hi.toFixed(2)}px)`;
 }
 
-const TITLE_SIZE = fluid(34, 64);
-const ACCENT_SIZE = fluid(20, 30);
+// Headline pushed larger than before so it reads as a genuine hero
+// statement rather than a page title; the accent line stays a step
+// down so the closing line echoes the thesis instead of competing with it.
+const TITLE_SIZE = fluid(38, 72);
+const ACCENT_SIZE = fluid(19, 28);
 
 export default function ManifestoPage() {
   return (
@@ -51,48 +54,98 @@ export default function ManifestoPage() {
         never gets clipped behind the navbar on shorter viewports.
       */}
       <section
-        className="flex flex-1 flex-col items-center pb-40 pt-36 text-center md:pb-48 md:pt-44"
+        className="relative flex flex-1 flex-col items-center pb-40 pt-36 text-center md:pb-48 md:pt-44"
         style={{
           paddingLeft: "max(1.5rem, env(safe-area-inset-left))",
           paddingRight: "max(1.5rem, env(safe-area-inset-right))",
         }}
       >
+        {/* 
+          Soft glow behind the headline — same white the rest of the page
+          already uses, just at very low opacity. Gives the hero a focal
+          point instead of copy sitting flat on pure black.
+        */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 -z-10"
+          style={{
+            background:
+              "radial-gradient(circle at 50% 30%, rgba(255,255,255,0.07), transparent 60%)",
+          }}
+        />
+
+        <span
+          className="fade-up text-[11px] font-medium uppercase tracking-[0.3em] text-white/40"
+          style={{ animationDelay: "0ms" }}
+        >
+          A Manifesto
+        </span>
 
         <h1
-          className="font-semibold leading-[1.05] tracking-tight text-white"
-          style={{ fontSize: TITLE_SIZE }}
+          className="fade-up mt-6 font-semibold leading-[1.05] tracking-tight text-white"
+          style={{ fontSize: TITLE_SIZE, animationDelay: "100ms" }}
         >
           Taste is identity.
         </h1>
 
-        <div className="mt-10 flex max-w-[620px] flex-col gap-5 text-[15px] leading-[1.75] text-white/55 sm:text-[16px] md:mt-12 md:max-w-[640px] md:text-[17px]">
+        <div
+          className="fade-up mt-10 flex max-w-[620px] flex-col gap-5 text-[15px] leading-[1.75] text-white/55 sm:text-[16px] md:mt-12 md:max-w-[640px] md:text-[17px]"
+          style={{ animationDelay: "200ms" }}
+        >
           <p>
-            What you love reveals who you are more honestly than anything you
-            could say about yourself. The films you return to. The albums
-            that live rent-free in your head. The books that rewired how you
-            think.
+            What you love says more about you than anything you&rsquo;d
+            choose to say yourself. The film you&rsquo;ve rewatched until you
+            know every cut. The song that got you through a year you don&rsquo;t
+            talk about. The book you keep lending out and never asking back.
           </p>
           <p>
-            Stratum is a social app where you rate films, music, and books.
-            Your ratings build a taste profile, and that profile finds you
-            people whose taste matches yours at a freakishly precise level.
-            Not followers. Not mutuals. People who rated the same things you
-            did, the same way you did.
+            Stratum turns your ratings on film, music, and books into a taste
+            profile — then finds the people who match it. Not friends of
+            friends. Not a feed. People who loved the same things, for the
+            same reasons.
           </p>
         </div>
 
+        {/* 
+          Signature divider — the three things you actually rate on Stratum,
+          standing in for the plain rule that used to sit here. Structure
+          that carries real information instead of just decorating the gap.
+        */}
         <div
-          aria-hidden="true"
-          className="my-12 h-px w-24 bg-gradient-to-r from-transparent via-white/20 to-transparent md:my-14"
-        />
+          className="fade-up my-12 flex items-center justify-center gap-3 text-[11px] font-medium uppercase tracking-[0.3em] text-white/35 md:my-14"
+          style={{ animationDelay: "300ms" }}
+        >
+          <span>Film</span>
+          <span className="h-px w-5 bg-white/20" aria-hidden="true" />
+          <span>Music</span>
+          <span className="h-px w-5 bg-white/20" aria-hidden="true" />
+          <span>Books</span>
+        </div>
 
         <p
-          className="max-w-[20ch] font-medium leading-[1.3] tracking-tight text-white"
-          style={{ fontSize: ACCENT_SIZE }}
+          className="fade-up max-w-[20ch] font-medium leading-[1.3] tracking-tight text-white"
+          style={{ fontSize: ACCENT_SIZE, animationDelay: "400ms" }}
         >
           Rate what moves you. Find who thinks like you.
         </p>
       </section>
+
+      <style>{`
+        @keyframes fadeUp {
+          from { opacity: 0; transform: translateY(14px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-up {
+          animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .fade-up {
+            animation: none;
+            opacity: 1;
+            transform: none;
+          }
+        }
+      `}</style>
     </main>
   );
 }
