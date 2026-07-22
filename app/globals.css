@@ -69,6 +69,7 @@ html,
    element on the page, not just the document body, gets the same
    thin, minimal treatment. */
 *::-webkit-scrollbar {
+  
   width: 6px;
   height: 6px;
 }
