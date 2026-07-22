@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import PocketBase from "pocketbase";
 
-const POCKETBASE_URL = process.env.NEXT_PUBLIC_POCKETBASE_URL || "http://127.0.0.1:8090";
+const POCKETBASE_URL = process.env.NEXT_PUBLIC_POCKETBASE_URL || "https://pocketbase-railway-production-28ed.up.railway.app";
 
 // The marketing number before any real signups existed — this was the
 // hardcoded "4,218" copy. Live count = this + global_settings.total_signups.

@@ -6,7 +6,7 @@ import type { TasteField } from "@/components/shared/taste-types";
 // Server-side PocketBase URL — reuses the same public env var the rest
 // of the app already reads from, since PocketBase itself is exposed the
 // same way whether the caller is the browser or this route.
-const POCKETBASE_URL = process.env.NEXT_PUBLIC_POCKETBASE_URL || "http://127.0.0.1:8090";
+const POCKETBASE_URL = process.env.NEXT_PUBLIC_POCKETBASE_URL || "https://pocketbase-railway-production-28ed.up.railway.app";
 
 // Shared secret so only this route (not randoms hitting PocketBase
 // directly) can write cache entries. Must be set to the exact same

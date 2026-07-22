@@ -35,7 +35,7 @@ const LIST_GAP = fluid(32, 48);
 
 const SOCIAL_LINKS = [
   { name: "Instagram", href: "https://www.instagram.com/joinstratum" },
-  { name: "TikTok", href: "https://www.tiktok.com/@joinstratum" },
+  { name: "TikTok", href: "https://www.tiktok.com/@joinstratum.app" },
   { name: "X", href: "https://twitter.com/joinstratum" },
   { name: "Email", href: "mailto:hello@joinstratum.app" },
 ];

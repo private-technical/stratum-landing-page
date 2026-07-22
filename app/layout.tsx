@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -15,7 +17,7 @@ const geistMono = Geist_Mono({
 const SITE_URL = "https://joinstratum.app";
 const SITE_NAME = "Stratum";
 const TITLE =
-  "Stratum — Rate Film, Music & Books. Find People Who Think Like You";
+  "Stratum — Taste finds its own";
 const DESCRIPTION =
   "Stratum is the social app for taste. Rate films, music, and books to build your taste profile, then get matched with people who rated the same things the same way — not followers, matches.";
 
@@ -179,6 +181,8 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         {children}
+        <SpeedInsights />
+        <Analytics />
       </body>
     </html>
   );

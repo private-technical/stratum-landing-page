@@ -12,6 +12,33 @@ interface HeroProps {
   onSkipToWaitlist?: () => void;
 }
 
+/* ------------------------------------------------------------------ */
+/*  Desktop title sizing — the layout switches from mobile to this      */
+/*  "desktop" block at the md breakpoint (768px), but a flat 96px was   */
+/*  only ever tuned for real desktop widths. On tablet widths just past */
+/*  that breakpoint, 96px is too wide for the two forced <br /> lines   */
+/*  to fit, so each one wraps again and the title reads as jampacked.   */
+/*  Interpolating between a tablet-appropriate size and the full 96px   */
+/*  (instead of snapping straight to it at md) fixes that without       */
+/*  touching the mobile layout at all.                                  */
+/* ------------------------------------------------------------------ */
+const HERO_TITLE_VIEWPORT_MIN = 768;
+const HERO_TITLE_VIEWPORT_MAX = 1440;
+
+function fluidTitlePx(min: number, max: number): string {
+  const slope = (max - min) / (HERO_TITLE_VIEWPORT_MAX - HERO_TITLE_VIEWPORT_MIN);
+  const coefficient = slope * 100;
+  const intercept = min - slope * HERO_TITLE_VIEWPORT_MIN;
+  const lo = Math.min(min, max);
+  const hi = Math.max(min, max);
+  const sign = coefficient < 0 ? "-" : "+";
+  return `clamp(${lo}px, calc(${intercept.toFixed(2)}px ${sign} ${Math.abs(
+    coefficient
+  ).toFixed(2)}vw), ${hi}px)`;
+}
+
+const HERO_TITLE_SIZE = fluidTitlePx(48, 96);
+
 function useTastePrefetch(field: "album" | "film" | "book", value: string) {
   // Tracks values already sent this session so backspacing/retyping the
   // same text doesn't refire — the debounce alone isn't enough for that
@@ -148,8 +175,8 @@ const Hero = forwardRef<HTMLElement, HeroProps>(function Hero({ onSkipToWaitlist
         <div className="hidden min-h-screen w-full flex-col items-center justify-center px-6 pb-20 pt-28 md:flex">
           <h1
             ref={titleReveal.ref}
-            className="mt-[50px] max-w-6xl font-medium leading-none tracking-[-0.025em] text-[96px]"
-            style={{ fontFamily: "inherit", ...titleReveal.style }}
+            className="mt-[50px] max-w-6xl font-medium leading-none tracking-[-0.025em]"
+            style={{ fontFamily: "inherit", fontSize: HERO_TITLE_SIZE, ...titleReveal.style }}
           >
             Your taste either speaks
             <br />
