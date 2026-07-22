@@ -113,14 +113,13 @@ export const metadata: Metadata = {
     },
   },
 
-  verification: {
-    // Paste your Google Search Console verification string here once you
-    // register the property (Search Console → Settings → Ownership
-    // verification → HTML tag):
-    // google: "your-google-site-verification-code",
-    // Same idea for Bing Webmaster Tools:
-    // other: { "msvalidate.01": "your-bing-verification-code" },
-  },
+  // Nothing needed here — Search Console is verified via DNS TXT record,
+  // which doesn't require an HTML meta tag. The `verification.google`
+  // field below only matters if you switch to the "HTML tag" method later.
+  // Optional: Bing Webmaster Tools can import your Search Console property
+  // directly (bing.com/webmasters → "Import from Google Search Console"),
+  // no separate code needed there either.
+  verification: {},
 
   other: {
     "apple-mobile-web-app-title": SITE_NAME,
