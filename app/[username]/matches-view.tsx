@@ -112,15 +112,15 @@ function getPressureContent(
 /*  no deadline set, so the caller hides the clock instead of showing   */
 /*  a fake one.                                                        */
 /* ------------------------------------------------------------------ */
-function useCountdown(expiresAt?: string | null) {
+function useCountdown(expiresAt?: string | null, stopped = false) {
   const target = expiresAt ? new Date(expiresAt).getTime() : null;
   const [now, setNow] = useState(() => Date.now());
 
   useEffect(() => {
-    if (!target) return;
+    if (!target || stopped) return;
     const id = window.setInterval(() => setNow(Date.now()), 1000);
     return () => window.clearInterval(id);
-  }, [target]);
+  }, [target, stopped]);
 
   if (!target) return null;
 
@@ -309,11 +309,11 @@ function ConversionProgress({ count }: { count: number }) {
       </div>
       <p
         className={`text-[12px] font-medium sm:text-[12.5px] ${
-          allDone ? "text-emerald-400/90" : "text-white/50"
+          allDone ? "text-red-400/90" : "text-white/50"
         }`}
       >
         {allDone
-          ? "The First Circle is full, you were too late."
+          ? "The First Circle is capped at 1k members, you're too late."
           : `${completed} of ${MAX_INVITES} invites converted`}
       </p>
     </div>
@@ -582,12 +582,20 @@ export default function MatchesView({ user }: { user: MatchesUser }) {
     : namedMatch
       ? `${namedMatch.sampleUsernames[0]} on ${SOURCE_LABEL[namedMatch.source]} rated "${namedMatch.title}" the same way you did.`
       : totalMatches > 3000
-        ? " "
+        ? "That's a lot of people... You're not rare."
         : "Wow, such empty. Your picks are very unique.";
 
   const inFirstCircle = user.isFirstCircle;
   const formattedPosition = new Intl.NumberFormat("en-US").format(user.waitlistPosition);
-  const inviteCountdown = useCountdown(user.inviteExpiresAt);
+
+  // Once all 3 invites have converted, the countdown no longer means
+  // anything for this user — whether they make the First Circle now
+  // depends on the global 1k cap (see ConversionProgress's "too late"
+  // copy), not on anything left for them to do before a deadline. So
+  // the clock stops ticking and stays hidden rather than counting down
+  // toward a deadline that's already moot.
+  const allInvitesConverted = (user.conversionCount ?? 0) >= MAX_INVITES;
+  const inviteCountdown = useCountdown(user.inviteExpiresAt, allInvitesConverted);
 
   const tastePath = getTastePath(tasteMatches);
   const pressureContent = getPressureContent(tasteCheckCompleted, tastePath, user.username);
@@ -623,7 +631,7 @@ export default function MatchesView({ user }: { user: MatchesUser }) {
   const queueAndPressureSection = (
     <div className="flex w-full max-w-2xl flex-col items-center gap-6 text-center">
       <div>
-        <FieldLabel>Your queue position</FieldLabel>
+        <FieldLabel>Your waitlist position</FieldLabel>
         <p className="mt-1.5 text-[30px] font-bold leading-tight tracking-[-0.02em] text-white sm:text-[34px]">
           {inFirstCircle ? "You're in the First Circle" : `#${formattedPosition}`}
         </p>
@@ -631,7 +639,7 @@ export default function MatchesView({ user }: { user: MatchesUser }) {
           {inFirstCircle
             ? "VIP access is yours. Welcome in."
             : pressureContent
-              ? "The First Circle members get ultra early access to Stratum."
+              ? "First Circle members jump the line."
               : "in line for Stratum — join the First Circle to skip it and unlock VIP access."}
         </p>
       </div>
@@ -644,7 +652,7 @@ export default function MatchesView({ user }: { user: MatchesUser }) {
 
           <ConversionProgress count={user.conversionCount ?? 0} />
 
-          <CountdownClock countdown={inviteCountdown} />
+          {!allInvitesConverted && <CountdownClock countdown={inviteCountdown} />}
 
           <p className="mt-5 text-[13.5px] leading-relaxed text-white/65">
             {pressureContent.consequence}
