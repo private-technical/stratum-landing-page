@@ -631,7 +631,7 @@ export default function MatchesView({ user }: { user: MatchesUser }) {
           {inFirstCircle
             ? "VIP access is yours. Welcome in."
             : pressureContent
-              ? "The First Circle members (1-1000) get ultra early access to Stratum."
+              ? "The First Circle members get ultra early access to Stratum."
               : "in line for Stratum — join the First Circle to skip it and unlock VIP access."}
         </p>
       </div>
