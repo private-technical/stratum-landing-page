@@ -73,7 +73,7 @@ function getPressureContent(
     return {
       ctaHeadline: (
         <>
-          Invite <Highlight>3</Highlight> people or get kicked off the waitlist
+          vouch for <Highlight>3</Highlight> people lock in your username 
         </>
       ),
       consequence:
@@ -313,7 +313,7 @@ function ConversionProgress({ count }: { count: number }) {
         }`}
       >
         {allDone
-          ? "You're in — welcome to the First Circle"
+          ? "The First Circle is full, you were too late."
           : `${completed} of ${MAX_INVITES} invites converted`}
       </p>
     </div>
@@ -565,7 +565,7 @@ export default function MatchesView({ user }: { user: MatchesUser }) {
   const matchHeadline =
     totalMatches === 0
       ? "Nobody shares your taste yet"
-      : `${new Intl.NumberFormat("en-US").format(totalMatches)} people like what you like`;
+      : `${new Intl.NumberFormat("en-US").format(totalMatches)} people think like you`;
 
   // Anchors the subtext on one real, named match if we have one.
   // Letterboxd is currently the only source that reliably returns

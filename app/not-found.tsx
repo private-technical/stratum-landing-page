@@ -12,9 +12,9 @@ const poppins = Poppins({
 // 404s should never show up in search results, even if something
 // somewhere returns one with a 200 instead of a true 404 status.
 export const metadata: Metadata = {
-  title: "Page not found",
+  title: "Reservation Expired",
   description:
-    "This content isn't available. It may have been removed or is no longer public.",
+    "Your reservation has expired. Please make a new reservation to access Stratum.",
   robots: { index: false, follow: false },
 };
 
@@ -34,10 +34,10 @@ export default function NotFound() {
         }}
       >
         <h1 className="text-3xl font-semibold leading-tight tracking-tight text-white sm:text-4xl">
-          This content isn&rsquo;t available
+          Reservation Expired
         </h1>
         <p className="max-w-[320px] text-[15px] leading-[1.75] text-white/55 sm:text-[16px]">
-          It may have been removed or is no longer public.
+          Stratum uses a reservation system to keep access limited to a small number of users. You didn’t convert all 3 invites, your username has been released.
         </p>
         <Link
           href="/"
