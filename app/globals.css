@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+/* Map your Next.js Font utility variable to Tailwind's utility class mapping */
+@theme {
+  --font-sans: var(--font-poppins), sans-serif;
+}
+
 :root {
   --color-bg: #000000;
   --color-fg: #ffffff;
@@ -45,49 +50,42 @@
 }
 
 /* ------------------------------------------------------------------ */
-/*  Scrollbars — thin, minimal, and consistent across browsers         */
+/* Optimized Scrollbars — Scoped safely to avoid FCP paint overhead */
 /* ------------------------------------------------------------------ */
-/* Applied universally (not just html) because this app scrolls inside
-   a custom container div, not the document itself — html/body are set
-   to overflow: hidden, so a rule scoped only to html would never
-   actually apply to the element that's really scrolling. */
-* {
-  /* Firefox, and now also Chromium 121+ / Safari 18.2+ */
+
+/* Standard cross-browser implementations */
+html, 
+.overflow-y-auto, 
+.overflow-auto {
   scrollbar-width: thin;
   scrollbar-color: var(--color-muted) transparent;
-}
-
-html,
-.overflow-y-auto,
-.overflow-auto {
-  /* Reserves the scrollbar's space up front so content doesn't shift
-     width when a scrollbar appears/disappears. */
   scrollbar-gutter: stable;
 }
 
-/* Chrome, Edge, Safari (WebKit) — applied broadly so any scrollable
-   element on the page, not just the document body, gets the same
-   thin, minimal treatment. */
-*::-webkit-scrollbar {
-  
+/* Webkit targeting: Restrict to only explicit scroll-containers instead of global '*' */
+html::-webkit-scrollbar,
+.overflow-y-auto::-webkit-scrollbar,
+.overflow-auto::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
-*::-webkit-scrollbar-track {
+html::-webkit-scrollbar-track,
+.overflow-y-auto::-webkit-scrollbar-track,
+.overflow-auto::-webkit-scrollbar-track {
   background: transparent;
 }
 
-*::-webkit-scrollbar-thumb {
+html::-webkit-scrollbar-thumb,
+.overflow-y-auto::-webkit-scrollbar-thumb,
+.overflow-auto::-webkit-scrollbar-thumb {
   background-color: var(--color-muted);
   border-radius: 9999px;
 }
 
-*::-webkit-scrollbar-thumb:hover {
+html::-webkit-scrollbar-thumb:hover,
+.overflow-y-auto::-webkit-scrollbar-thumb:hover,
+.overflow-auto::-webkit-scrollbar-thumb:hover {
   background-color: var(--color-fg);
   opacity: 0.8;
-}
-
-*::-webkit-scrollbar-corner {
-  background: transparent;
 }

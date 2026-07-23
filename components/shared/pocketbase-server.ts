@@ -1,6 +1,6 @@
 import type { TasteMatchLocation } from "./taste-types";
 
-const POCKETBASE_URL = process.env.NEXT_PUBLIC_POCKETBASE_URL || "https://pocketbase-railway-production-28ed.up.railway.app";
+const POCKETBASE_URL = process.env.NEXT_PUBLIC_POCKETBASE_URL || "https://kvxjstklylu1j2p.ba7w.pocketbasecloud.com";
 
 // Shared between the two Route Handlers that set this cookie
 // (set-session, access) and page.tsx, which reads it.

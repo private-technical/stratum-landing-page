@@ -1,17 +1,15 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+// Remove Geist, and pull Poppins directly from next/font/google
+import { Poppins } from "next/font/google"; 
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const poppins = Poppins({
+  variable: "--font-poppins",
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"], // Explicitly declare your site's exact weights
+  display: "swap", // Ensures instant text rendering using a system fallback
 });
 
 const SITE_URL = "https://joinstratum.app";
@@ -173,9 +171,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased overscroll-none`}
+      /* Swap the Geist variables out for your new poppins variable */
+      className={`${poppins.variable} h-full antialiased overscroll-none`}
     >
-      <body className="min-h-full flex flex-col overscroll-none">
+      <body className="min-h-full flex flex-col overscroll-none font-sans">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const POCKETBASE_URL = process.env.NEXT_PUBLIC_POCKETBASE_URL || "https://pocketbase-railway-production-28ed.up.railway.app";
+const POCKETBASE_URL = process.env.NEXT_PUBLIC_POCKETBASE_URL || "https://kvxjstklylu1j2p.ba7w.pocketbasecloud.com";
 
 // Thin proxy so the browser only ever talks to this same-origin route,
 // never PocketBase directly — keeps PocketBase's CORS config untouched

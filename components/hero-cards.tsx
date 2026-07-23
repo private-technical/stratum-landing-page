@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { motion, useReducedMotion, type PanInfo } from "framer-motion";
+import Image from "next/image";
 
 /* ------------------------------------------------------------------ */
 /*  Fluid sizing                                                       */
@@ -39,11 +40,16 @@ function fluid(
   ).toFixed(2)}${unit}), ${hi.toFixed(2)}px)`;
 }
 
-function cld(url: string, width: number) {
-  const w = Math.max(1, Math.round(width));
-  return url.replace(
+// Custom next/image loader for Cloudinary. Because this is passed via the
+// `loader` prop (not the default one), Next skips its own optimization API
+// entirely and just uses whatever URL this returns — so no
+// `images.remotePatterns` entry is needed in next.config.js, and Cloudinary's
+// own f_auto/q_auto/dpr_auto pipeline keeps doing the actual transform work
+// next/image just asks for a handful of widths to build a srcset.
+function cloudinaryLoader({ src, width }: { src: string; width: number }) {
+  return src.replace(
     "/upload/",
-    `/upload/f_auto,q_auto,dpr_auto,w_${w},c_limit/`
+    `/upload/f_auto,q_auto,dpr_auto,w_${Math.max(1, Math.round(width))},c_limit/`
   );
 }
 
@@ -53,32 +59,31 @@ function RevealImage({
   aspectRatio,
   className,
   delay = 0,
+  priority = false,
 }: {
   src: string;
   alt: string;
   aspectRatio: number;
   className?: string;
   delay?: number;
+  priority?: boolean;
 }) {
   const imgRef = useRef<HTMLImageElement>(null);
   const [loaded, setLoaded] = useState(false);
 
+  // Same cache-race guard as before: if the browser already has this image
+  // cached, `.complete` can be true before our onLoad listener is attached,
+  // so the reveal would otherwise never fire.
   useEffect(() => {
     if (imgRef.current?.complete) setLoaded(true);
   }, []);
 
   return (
-    <img
-      ref={imgRef}
-      src={cld(src, 290)}
-      alt={alt}
-      draggable={false}
-      loading="eager"
-      decoding="async"
-      fetchPriority="high"
-      onLoad={() => setLoaded(true)}
+    <div
       className={className}
       style={{
+        // Required: `fill` positions the <img> absolutely against this box.
+        position: "relative",
         aspectRatio,
         opacity: loaded ? 1 : 0,
         transform: loaded ? "translateY(0)" : "translateY(10px)",
@@ -86,7 +91,27 @@ function RevealImage({
           "opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1)",
         transitionDelay: `${delay}ms`,
       }}
-    />
+    >
+      <Image
+        ref={imgRef}
+        src={src}
+        alt={alt}
+        loader={cloudinaryLoader}
+        fill
+        // Cards are clamped to a max scale of 1 (see SCALE_B_MAX), so they
+        // never render wider than BASE_CARD_WIDTH — a fixed size beats
+        // guessing a vw split against a container-query-driven layout.
+        sizes={`${BASE_CARD_WIDTH}px`}
+        priority={priority}
+        loading={priority ? undefined : "eager"}
+        draggable={false}
+        decoding="async"
+        onLoad={() => setLoaded(true)}
+        // object-contain (not cover) intentionally: these are posters and
+        // covers with mixed native aspect ratios and shouldn't get cropped.
+        className="object-contain pointer-events-none select-none"
+      />
+    </div>
   );
 }
 
@@ -387,6 +412,11 @@ export default function HeroCards() {
                   alt={card.alt}
                   aspectRatio={CARD_ASPECT_RATIO}
                   delay={i * 60}
+                  // Above-the-fold hero cards (the ones still visible at the
+                  // compact tier) skip lazy-loading. Derived from
+                  // VISIBLE_COMPACT so it can't drift out of sync with the
+                  // constant that actually governs the compact-tier cutoff.
+                  priority={i < VISIBLE_COMPACT}
                   className={`hero-fan-img pointer-events-none select-none object-contain drop-shadow-[0_30px_40px_rgba(0,0,0,0.55)] transition-shadow duration-300 ${
                     isActive ? "drop-shadow-[0_40px_55px_rgba(0,0,0,0.65)]" : ""
                   }`}
