@@ -174,7 +174,7 @@ export default function RootLayout({
       /* Swap the Geist variables out for your new poppins variable */
       className={`${poppins.variable} h-full antialiased overscroll-none`}
     >
-      <body className="min-h-full flex flex-col overscroll-none font-sans">
+      <body className={`min-h-full flex flex-col overscroll-none ${poppins.className}`}>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

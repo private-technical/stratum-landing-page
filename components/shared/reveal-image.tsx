@@ -2,8 +2,9 @@
 
 /* ------------------------------------------------------------------ */
 /*  Image loading: fast delivery + an intentional reveal               */
-/*  - cld() asks Cloudinary for a right-sized, auto-format/quality     */
-/*    asset instead of shipping the full-resolution PNG to everyone.   */
+/*  - cld() (shared/cloudinary.ts) asks Cloudinary for a right-sized,  */
+/*    auto-format/quality asset instead of shipping the full-res PNG   */
+/*    to everyone.                                                     */
 /*  - RevealImage fades/lifts each image in once it's actually         */
 /*    decoded, so loading reads as a deliberate motion instead of a    */
 /*    pop-in. Above-the-fold images are marked priority so they start  */
@@ -11,17 +12,7 @@
 /*    lazily as it nears view.                                         */
 /* ------------------------------------------------------------------ */
 import { useEffect, useRef, useState } from "react";
-
-export function cld(url: string, width: number) {
-  const w = Math.max(1, Math.round(width));
-  // f_auto: serve AVIF/WebP where supported. q_auto: Cloudinary's
-  // perceptual quality tuning. dpr_auto + w_: fetch exactly the pixels
-  // the layout needs for the viewer's screen, nothing more.
-  return url.replace(
-    "/upload/",
-    `/upload/f_auto,q_auto,dpr_auto,w_${w},c_limit/`
-  );
-}
+import { cld } from "./cloudinary";
 
 export type RevealImageProps = {
   src: string;
@@ -48,6 +39,7 @@ export function RevealImage({
 }: RevealImageProps) {
   const imgRef = useRef<HTMLImageElement>(null);
   const [loaded, setLoaded] = useState(false);
+  const [errored, setErrored] = useState(false);
 
   // If the browser already has this image cached, the load event may
   // fire before we attach the listener — check on mount so it doesn't
@@ -55,6 +47,20 @@ export function RevealImage({
   useEffect(() => {
     if (imgRef.current?.complete) setLoaded(true);
   }, []);
+
+  // A failed request (bad URL, network hiccup, Cloudinary hiccup) should
+  // never leave this card permanently invisible — reveal it and swap to
+  // a plain broken-alt render instead of hanging at opacity: 0 forever.
+  if (errored) {
+    return (
+      <span
+        role="img"
+        aria-label={alt}
+        className={className}
+        style={{ ...style, width, height, display: "inline-block" }}
+      />
+    );
+  }
 
   return (
     <img
@@ -66,6 +72,7 @@ export function RevealImage({
       decoding="async"
       fetchPriority={priority ? "high" : "auto"}
       onLoad={() => setLoaded(true)}
+      onError={() => setErrored(true)}
       className={className}
       style={{
         ...style,

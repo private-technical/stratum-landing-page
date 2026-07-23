@@ -3,6 +3,7 @@
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { motion, useReducedMotion, type PanInfo } from "framer-motion";
 import Image from "next/image";
+import { cloudinaryLoader } from "./shared/cloudinary";
 
 /* ------------------------------------------------------------------ */
 /*  Fluid sizing                                                       */
@@ -40,18 +41,13 @@ function fluid(
   ).toFixed(2)}${unit}), ${hi.toFixed(2)}px)`;
 }
 
-// Custom next/image loader for Cloudinary. Because this is passed via the
-// `loader` prop (not the default one), Next skips its own optimization API
-// entirely and just uses whatever URL this returns — so no
-// `images.remotePatterns` entry is needed in next.config.js, and Cloudinary's
-// own f_auto/q_auto/dpr_auto pipeline keeps doing the actual transform work
-// next/image just asks for a handful of widths to build a srcset.
-function cloudinaryLoader({ src, width }: { src: string; width: number }) {
-  return src.replace(
-    "/upload/",
-    `/upload/f_auto,q_auto,dpr_auto,w_${Math.max(1, Math.round(width))},c_limit/`
-  );
-}
+// Cloudinary loader for next/image — see ../shared/cloudinary.ts. Passed
+// via the `loader` prop (not the default one), so Next skips its own
+// optimization API entirely and just uses whatever URL that returns —
+// no `images.remotePatterns` entry needed in next.config.ts, and
+// Cloudinary's own f_auto/q_auto/dpr_auto pipeline keeps doing the
+// actual transform work; next/image just asks for a handful of widths
+// to build a srcset.
 
 function RevealImage({
   src,
