@@ -39,34 +39,6 @@ function fluidTitlePx(min: number, max: number): string {
 
 const HERO_TITLE_SIZE = fluidTitlePx(48, 96);
 
-/* ------------------------------------------------------------------ */
-/*  Desktop input row on tablet — the three inputs render at fixed      */
-/*  design widths (363 / 264 / 363, +30px gaps = 1050px total) inside a */
-/*  flex-wrap row. That's fine on real desktop, but the first tablet    */
-/*  widths past `md` (768px) don't have 1050px of content space, so     */
-/*  flex-wrap was silently dropping the third field onto its own line.  */
-/*  Scaling all three down together (ratio preserved) from a tablet-    */
-/*  safe minimum up to their real widths — reusing fluidTitlePx's       */
-/*  clamp() and the same 768–1440 viewport range as the title — keeps   */
-/*  them on one row at 768px without changing anything at real desktop  */
-/*  widths, where the clamp already resolves to the original sizes.     */
-/* ------------------------------------------------------------------ */
-const HERO_FIELD_GAP = 30; // matches gap-[30px] on the inputs row
-const HERO_SECTION_PADDING_X = 24; // px-6 on the desktop section wrapper
-const HERO_FIELD_SAFETY_BUFFER = 10; // px of slack (scrollbars etc.) before solving for scale
-const HERO_FIELD_DESIGN_WIDTHS = [363, 264, 363]; // album, film, book — must match heroFields below
-
-const heroFieldsMinScale =
-  (HERO_TITLE_VIEWPORT_MIN -
-    2 * HERO_SECTION_PADDING_X -
-    (HERO_FIELD_DESIGN_WIDTHS.length - 1) * HERO_FIELD_GAP -
-    HERO_FIELD_SAFETY_BUFFER) /
-  HERO_FIELD_DESIGN_WIDTHS.reduce((sum, w) => sum + w, 0);
-
-function fluidFieldWidthPx(designWidth: number): string {
-  return fluidTitlePx(designWidth * heroFieldsMinScale, designWidth);
-}
-
 function useTastePrefetch(field: "album" | "film" | "book", value: string) {
   // Tracks values already sent this session so backspacing/retyping the
   // same text doesn't refire — the debounce alone isn't enough for that
@@ -226,28 +198,25 @@ const Hero = forwardRef<HTMLElement, HeroProps>(function Hero({ onSkipToWaitlist
               className="flex flex-wrap items-center justify-center gap-[30px]"
               style={inputsReveal.style}
             >
-              {heroFields.map((field) => {
-                const width = fluidFieldWidthPx(field.width);
-                return (
-                  <TasteAutocomplete
-                    key={field.name}
-                    field={field.name as "album" | "film" | "book"}
-                    name={field.name}
-                    value={field.value}
-                    onChange={field.onChange}
-                    placeholder={field.placeholder}
-                    required
-                    ariaRequired
-                    onValidityChange={(valid) =>
-                      setFieldValid(field.name as "album" | "film" | "book", valid)
-                    }
-                    showValidationErrors={attemptedSubmit}
-                    wrapperStyle={{ width }}
-                    inputStyle={{ width, height: 60 }}
-                    inputClassName="w-full rounded-[15px] border border-white/10 bg-[#F0F0F0]/20 px-7 text-center text-[14px] font-medium leading-[1.25] tracking-[-0.025em] text-white placeholder:text-white/60 transition-colors hover:border-white/25 hover:bg-[#F0F0F0]/28 focus:outline-none focus:ring-1 focus:ring-white/30 focus:border-white/25"
-                  />
-                );
-              })}
+              {heroFields.map((field) => (
+                <TasteAutocomplete
+                  key={field.name}
+                  field={field.name as "album" | "film" | "book"}
+                  name={field.name}
+                  value={field.value}
+                  onChange={field.onChange}
+                  placeholder={field.placeholder}
+                  required
+                  ariaRequired
+                  onValidityChange={(valid) =>
+                    setFieldValid(field.name as "album" | "film" | "book", valid)
+                  }
+                  showValidationErrors={attemptedSubmit}
+                  wrapperStyle={{ width: 363 }}
+                  inputStyle={{ width: 363, height: 60 }}
+                  inputClassName="w-full rounded-[15px] border border-white/10 bg-[#F0F0F0]/20 px-7 text-center text-[14px] font-medium leading-[1.25] tracking-[-0.025em] text-white placeholder:text-white/60 transition-colors hover:border-white/25 hover:bg-[#F0F0F0]/28 focus:outline-none focus:ring-1 focus:ring-white/30 focus:border-white/25"
+                />
+              ))}
             </div>
 
             <button
