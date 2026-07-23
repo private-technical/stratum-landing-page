@@ -197,7 +197,7 @@ function FieldIcon({ field }: { field: string }) {
 // ready-to-send referral message (code + link included) instead of
 // just the bare string.
 function buildInviteMessage(code: string) {
-  return `Join the waitlist with my code so I can get early access. I think the invite expires in 24 hours though:\nCode: ${code}\nhttps://joinstratum.app`;
+  return `Join the waitlist with my code so I can get early access. I think it expires in 24 hours though\nCode: ${code}\nhttps://joinstratum.app`;
 }
 
 /** A plain display of the invite code, not a call-to-action — a

@@ -351,7 +351,7 @@ export default function HeroModal({ isOpen, onClose, picks }: HeroModalProps) {
               You&apos;re on the list.
             </h2>
             <p className="mx-auto mt-2 max-w-[280px] text-[14px] leading-[1.5] text-white/55">
-              We&apos;ll email <span className="text-white/85">{waitlistEmail || "you"}</span> when your matches are ready.
+              Check your inbox at <span className="text-white/85">{waitlistEmail || "you"}</span> for your private link.
             </p>
             {accessToken && (
               <p className="mt-1 text-[13px] leading-[1.5] text-white/35">

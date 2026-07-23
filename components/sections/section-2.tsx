@@ -357,7 +357,7 @@ const Section2 = forwardRef<HTMLElement>(function Section2(_props, ref) {
                 You&apos;re on the list.
               </h2>
               <p className="mx-auto mt-4 max-w-[420px] text-[16px] leading-[1.5] text-white/60">
-                We&apos;ll email <span className="text-white/90">{email}</span> when your matches are ready.
+                Check your inbox at <span className="text-white/90">{email}</span> for your private link.
               </p>
               <p className="mt-1 text-[14px] text-white/35">
                 Taking you to your matches now&hellip;
@@ -517,7 +517,7 @@ const Section2 = forwardRef<HTMLElement>(function Section2(_props, ref) {
                 You&apos;re on the list.
               </h2>
               <p className="mx-auto mt-4 max-w-[380px] text-[15px] leading-[1.5] text-white/60">
-                We&apos;ll email <span className="text-white/90">{email}</span> when your matches are ready.
+                Check your inbox at <span className="text-white/90">{email}</span> for your private link.
               </p>
               <p className="mt-1 text-[13px] text-white/35">
                 Taking you to your matches now&hellip;
@@ -663,7 +663,7 @@ const Section2 = forwardRef<HTMLElement>(function Section2(_props, ref) {
               You&apos;re on the list.
             </h2>
             <p className="mx-auto mt-3 max-w-[28ch] text-[14px] leading-[1.5] text-white/60">
-              We&apos;ll email <span className="text-white/90">{email}</span> when your matches are ready.
+              Check your inbox at <span className="text-white/90">{email}</span> for your private link.
             </p>
             <p className="mt-1 text-[13px] text-white/35">
               Taking you to your matches now&hellip;
