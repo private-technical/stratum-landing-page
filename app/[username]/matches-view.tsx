@@ -582,7 +582,7 @@ export default function MatchesView({ user }: { user: MatchesUser }) {
     : namedMatch
       ? `${namedMatch.sampleUsernames[0]} on ${SOURCE_LABEL[namedMatch.source]} rated "${namedMatch.title}" the same way you did.`
       : totalMatches > 3000
-        ? "Your taste is NOT niche and open spots are limited. Invite 3 friends or get kicked off the waitlist."
+        ? " "
         : "Wow, such empty. Your picks are very unique.";
 
   const inFirstCircle = user.isFirstCircle;
