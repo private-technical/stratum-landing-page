@@ -161,6 +161,13 @@ const Section3 = forwardRef<HTMLElement>(function Section3(_props, ref) {
     ...TASTE_CARDS.map((card) => card.y - SECTION_3_Y_OFFSET + card.height)
   );
 
+  // The cards' x values are calibrated to a fixed ~1936px-wide canvas
+  // (see the comment above TASTE_CARDS), not the actual browser width.
+  // Used below to scale the whole wall down to fit any xl-tier viewport
+  // narrower than that canvas, instead of letting the rightmost cards
+  // run past whatever's actually visible.
+  const cardWallWidth = Math.max(...TASTE_CARDS.map((card) => card.x + card.width));
+
   return (
     <section
       ref={ref}
@@ -224,25 +231,54 @@ const Section3 = forwardRef<HTMLElement>(function Section3(_props, ref) {
             Figma x/y (y shifted by SECTION_3_Y_OFFSET), fully independent of
             the others. Wrapper height is derived from the cards themselves
             (see cardWallHeight above) so the section doesn't run on past
-            the last card. */}
-        <div className="relative" style={{ height: cardWallHeight }}>
-          {TASTE_CARDS.map((card, i) => (
-            <RevealImage
-              key={card.id}
-              src={card.src}
-              alt={card.alt}
-              width={card.width}
-              height={card.height}
-              delay={i * 50}
-              style={{
-                position: "absolute",
-                left: card.x,
-                top: card.y - SECTION_3_Y_OFFSET,
-                zIndex: card.zIndexOverride,
-              }}
-              className="object-contain drop-shadow-[0_30px_40px_rgba(0,0,0,0.45)]"
-            />
-          ))}
+            the last card.
+
+            The x values run out to ~1936px (cardWallWidth), calibrated to
+            that fixed canvas rather than the real viewport. Unscaled, any
+            xl-tier width narrower than ~1936px — which is most real
+            screens, including common ones like 1440 and 1536 — clipped
+            the rightmost 1-2 cards straight off the edge via the
+            section's overflow-hidden, since their absolute position ran
+            past whatever was actually visible. scale(min(1, 100vw /
+            cardWallWidth)) shrinks the whole wall uniformly, anchored to
+            the same top-left corner it already renders from, so every
+            card stays visible and correctly fanned. It's an exact no-op
+            (scale(1)) once the viewport reaches cardWallWidth, so screens
+            that already showed everything correctly are pixel-identical
+            to before. */}
+        <div
+          className="relative w-full"
+          style={{
+            height: `calc(${cardWallHeight}px * min(1, 100vw / ${cardWallWidth}px))`,
+          }}
+        >
+          <div
+            className="absolute left-0 top-0"
+            style={{
+              width: cardWallWidth,
+              height: cardWallHeight,
+              transform: `scale(min(1, 100vw / ${cardWallWidth}px))`,
+              transformOrigin: "top left",
+            }}
+          >
+            {TASTE_CARDS.map((card, i) => (
+              <RevealImage
+                key={card.id}
+                src={card.src}
+                alt={card.alt}
+                width={card.width}
+                height={card.height}
+                delay={i * 50}
+                style={{
+                  position: "absolute",
+                  left: card.x,
+                  top: card.y - SECTION_3_Y_OFFSET,
+                  zIndex: card.zIndexOverride,
+                }}
+                className="object-contain drop-shadow-[0_30px_40px_rgba(0,0,0,0.45)]"
+              />
+            ))}
+          </div>
         </div>
       </div>
 

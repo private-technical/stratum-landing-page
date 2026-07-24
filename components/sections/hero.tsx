@@ -171,8 +171,14 @@ const Hero = forwardRef<HTMLElement, HeroProps>(function Hero({ onSkipToWaitlist
         ref={ref}
         className="relative flex w-full flex-col items-center text-center"
       >
-        {/* Desktop — unchanged */}
-        <div className="hidden min-h-screen w-full flex-col items-center justify-center px-6 pb-20 pt-28 md:flex">
+        {/* Desktop — unchanged, now only from lg (1024px) up. Tablet
+            widths (md–lg, ~768–1023px) used to land here too, which is
+            what caused the three fixed-width inputs to wrap onto their
+            own stacked rows (they need ~1150px to fit in one row) and
+            the min-h-screen + full desktop padding to overflow shorter
+            tablet viewport heights. Below lg, the mobile block now
+            renders instead — see that block's comment. */}
+        <div className="hidden min-h-screen w-full flex-col items-center justify-center px-6 pb-20 pt-28 lg:flex">
           <h1
             ref={titleReveal.ref}
             className="mt-[50px] max-w-6xl font-medium leading-none tracking-[-0.025em]"
@@ -253,10 +259,16 @@ const Hero = forwardRef<HTMLElement, HeroProps>(function Hero({ onSkipToWaitlist
           </form>
         </div>
 
-        {/* Mobile — distinct layout: a tighter headline with one
+        {/* Mobile + tablet — distinct layout: a tighter headline with one
             typographic accent, and a single morphing input driven by a
-            segmented tab switcher instead of three stacked boxes. */}
-        <div className="flex w-full flex-col items-center px-5 pb-16 pt-24 md:hidden">
+            segmented tab switcher instead of three stacked boxes. Now
+            covers tablet widths too (below lg, ~<1024px), not just true
+            mobile — the compact, non-min-h-screen layout here fits
+            shorter tablet viewports without overflowing, and the tab
+            switcher avoids the input-wrapping/stacking that happened on
+            tablet in the old md-and-up desktop block. True mobile
+            (<768px) renders exactly as before. */}
+        <div className="flex w-full flex-col items-center px-5 pb-16 pt-24 lg:hidden">
           <h1
             ref={titleRevealM.ref}
             className="max-w-[23ch] font-medium leading-[1.25] tracking-[-0.02em] text-[28px]"

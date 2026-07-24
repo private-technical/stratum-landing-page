@@ -73,32 +73,32 @@ function getPressureContent(
     return {
       ctaHeadline: (
         <>
-          vouch for <Highlight>3</Highlight> people lock in your username 
+          Invite <Highlight>3</Highlight> friends 
         </>
       ),
       consequence:
-        "Complete all 3 invites before your code expires to enter The First Circle.",
+        "Complete all 3 invites to reserve your username and unlock First Circle.",
     };
   }
   if (tastePath === "niche") {
     return {
       ctaHeadline: (
         <>
-          Invite <Highlight>3</Highlight> people to unlock The First Circle
+          Invite <Highlight>3</Highlight> friends 
         </>
       ),
       consequence:
-        "Complete the invites before your code expires or you'll be kicked off the waitlist.",
+        "Complete all 3 invites to reserve your username and unlock First Circle.",
     };
   }
   if (tastePath === "common") {
     return {
       ctaHeadline: (
         <>
-          Invite <Highlight>3</Highlight> people or get kicked off the waitlist
+          Invite <Highlight>3</Highlight> friends 
         </>
       ),
-      consequence: `Complete all 3 invites before your code expires to enter The First Circle.`,
+      consequence: `Complete all 3 invites to reserve your username and unlock First Circle.`,
     };
   }
   return null;
@@ -137,7 +137,7 @@ function useCountdown(expiresAt?: string | null, stopped = false) {
 }
 
 /** Small uppercase label that announces each block before its content —
- *  "Your spot," "Your invite code," "Code expires in," "Your top match" —
+ *  "Your spot," "INVITE CODE," "Code expires in," "Your top match" —
  *  so the page has a clear order to read in instead of every line
  *  sitting at the same visual weight. */
 function FieldLabel({ children }: { children: React.ReactNode }) {
@@ -197,7 +197,7 @@ function FieldIcon({ field }: { field: string }) {
 // ready-to-send referral message (code + link included) instead of
 // just the bare string.
 function buildInviteMessage(code: string) {
-  return `Join the waitlist with my code so I can get early access. I think it expires in 24 hours though\nCode: ${code}\nhttps://joinstratum.app`;
+  return `drop your top album, film, and book on here. my username expires if you don't use the code lol \nCode: ${code}\nhttps://joinstratum.app`;
 }
 
 /** A plain display of the invite code, not a call-to-action — a
@@ -240,7 +240,7 @@ function InviteCodeChip({
         }
       }}
       aria-disabled={expired}
-      aria-label={expired ? "Invite code (expired)" : "Your invite code"}
+      aria-label={expired ? "Invite code (expired)" : "INVITE CODE"}
       className={`inline-flex items-center gap-2.5 rounded-lg border px-4 py-3 transition-colors sm:py-2.5 ${
         expired
           ? "cursor-default border-white/10 bg-white/[0.02]"
@@ -314,7 +314,7 @@ function ConversionProgress({ count }: { count: number }) {
       >
         {allDone
           ? "The First Circle is capped at 1k members, you're too late."
-          : `${completed} of ${MAX_INVITES} invites converted`}
+          : `${completed}/${MAX_INVITES} friends joined`}
       </p>
     </div>
   );
@@ -339,7 +339,7 @@ function CountdownClock({
           countdown.expired ? "text-white/45" : "text-red-400/90"
         }`}
       >
-        {countdown.expired ? "Time's up" : "code expires in"}
+        {countdown.expired ? "Time's up" : "Complete within"}
       </span>
       <span
         className={`font-mono text-[36px] font-bold leading-none tabular-nums sm:text-[52px] ${
@@ -582,7 +582,7 @@ export default function MatchesView({ user }: { user: MatchesUser }) {
     : namedMatch
       ? `${namedMatch.sampleUsernames[0]} on ${SOURCE_LABEL[namedMatch.source]} rated "${namedMatch.title}" the same way you did.`
       : totalMatches > 3000
-        ? "That's a lot of people... You're not rare."
+        ? "Turns out your taste isn't that unique."
         : "Wow, such empty. Your picks are very unique.";
 
   const inFirstCircle = user.isFirstCircle;
@@ -631,16 +631,16 @@ export default function MatchesView({ user }: { user: MatchesUser }) {
   const queueAndPressureSection = (
     <div className="flex w-full max-w-2xl flex-col items-center gap-6 text-center">
       <div>
-        <FieldLabel>Your waitlist position</FieldLabel>
+        
         <p className="mt-1.5 text-[30px] font-bold leading-tight tracking-[-0.02em] text-white sm:text-[34px]">
           {inFirstCircle ? "You're in the First Circle" : `#${formattedPosition}`}
         </p>
         <p className="mt-1.5 text-[14px] font-medium text-white/60 sm:text-[15px]">
           {inFirstCircle
-            ? "VIP access is yours. Welcome in."
+            ? "You're in! Welcome to the First Circle."
             : pressureContent
-              ? "First Circle members jump the line."
-              : "in line for Stratum — join the First Circle to skip it and unlock VIP access."}
+              ? "You're on the waitlist. First Circle members skip it."
+              : "Find your people on Stratum. First Circle gets in first.."}
         </p>
       </div>
 
@@ -659,7 +659,7 @@ export default function MatchesView({ user }: { user: MatchesUser }) {
           </p>
 
           <div className="mt-6 flex flex-col items-center gap-1.5">
-            <FieldLabel>Your invite code</FieldLabel>
+            <FieldLabel>INVITE CODE</FieldLabel>
             <InviteCodeChip
               code={user.inviteCode}
               expired={inviteCountdown?.expired ?? false}
@@ -739,7 +739,7 @@ export default function MatchesView({ user }: { user: MatchesUser }) {
                     {location.sampleUsernames.length > 0
                       ? `${location.sampleUsernames[0]} on ${SOURCE_LABEL[location.source]} rated this the same way you did.`
                       : location.matchCount > 0
-                        ? `${new Intl.NumberFormat("en-US").format(location.matchCount)} people rated this the same way.`
+                        ? `${new Intl.NumberFormat("en-US").format(location.matchCount)} people rated this exactly like you did.`
                         : "Nobody else has rated this yet."}
                   </p>
                 </div>

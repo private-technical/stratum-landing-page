@@ -14,7 +14,7 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: "Reservation Expired",
   description:
-    "Your reservation has expired. Please make a new reservation to access Stratum.",
+    "Your username has been released because your reservation expired before all 3 invites were completed. Your email is still on the waitlist.",
   robots: { index: false, follow: false },
 };
 
@@ -37,7 +37,7 @@ export default function NotFound() {
           Reservation Expired
         </h1>
         <p className="max-w-[320px] text-[15px] leading-[1.75] text-white/55 sm:text-[16px]">
-          Stratum uses a reservation system to keep access limited to a small number of users. You didn’t convert all 3 invites, your username has been released.
+          Your username has been released because your reservation expired before all 3 invites were completed. Your email is still on the waitlist.
         </p>
         <Link
           href="/"

@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from "next";
 import { Poppins } from "next/font/google"; 
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
+import Script from "next/script";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -179,6 +180,21 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        {/* Google tag (gtag.js) — loaded via next/script so Next.js
+            handles the timing (after the page is interactive) instead
+            of a plain <script> tag blocking/racing hydration. */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-0828WKZ5DN"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-0828WKZ5DN');
+          `}
+        </Script>
         {children}
         <SpeedInsights />
         <Analytics />
